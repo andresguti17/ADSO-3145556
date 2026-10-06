@@ -1,81 +1,127 @@
 # Informe 1 — Commits en el repositorio de documentación y en los repositorios de tu equipo
 
-**Periodo:** del 11 de agosto al 30 de septiembre de 2026 (hora Colombia, UTC-5)  
+**Periodo:** del 1 al 30 de agosto de 2026 (hora Colombia, UTC-5)
 **Repositorio principal de la ficha:** https://github.com/code-sena/ADSO-3145556
 
 | Campo | Valor |
 |---|---|
-| Aprendiz | Diego Andrés Gutiérrez Nuñez |
-| Usuario de GitHub | `andresguti17` |
+| Aprendiz | |
+| Usuario de GitHub | |
 | Ficha | ADSO-3145556 |
-| Proyecto (equipo) | faceattend-edu |
-| Prefijo de los repositorios del equipo | `fae-` |
-| Correo(s) con el que haces commit | `diangunu17@gmail.com`; `diangunu1709@gmail.com` |
-| Fecha de elaboración | 06 de octubre de 2026 |
+| Proyecto (equipo) | |
+| Prefijo de los repositorios del equipo | |
+| Correo(s) con el que haces commit | |
+| Fecha de elaboración | |
+
+<details>
+<summary><strong>Instrucciones — léelas y borra este bloque antes de entregar</strong></summary>
+
+**Qué reporta este informe.** Todos los commits que hiciste en el repositorio de documentación (`-docs`) y en los demás repositorios de **tu equipo**. Los commits en cualquier otro repositorio (personal, forks, otros equipos) van en el Informe 2.
+
+**Importante: los repositorios de equipo se crearon el 25 de agosto de 2026.** Antes de esa fecha no pudiste hacer commits en ellos. Si tu trabajo de la primera y segunda semana de agosto estaba en otro repositorio, va en el Informe 2, no aquí.
+
+**Repositorios de cada equipo** (todos en la organización `code-sena`):
+
+| Proyecto | Prefijo | Repositorios |
+|---|---|---|
+| edu-air-control | `ea-control-` | api, db, docs, portal, **worker** |
+| energy-monitor | `en-monitor-` | api, app, db, docs, portal |
+| faceattend-edu | `fae-` | api, app, db, docs, portal |
+| rent-car | `rtm-` | api, app, db, docs, portal |
+| save-your-water | `sy-water-` | api, app, db, docs, **worker** |
+| school-guardian | `sg-` | api, app, db, docs, portal |
+| translates-sign-language | `trans-sl-` | api, app, db, docs, portal |
+| vehicle-washing | `vehicle-w-` | api, app, db, docs, portal |
+| woman-alert | `wal-` | api, app, db, docs, portal |
+| your-event | `yev-` | api, app, db, docs, portal |
+
+Si tu equipo usa `worker` en lugar de `app` o `portal`, cambia el nombre del bloque correspondiente (sección 3).
+
+**Cómo obtener tus commits.** Para cada repositorio, desde una terminal **Git Bash**, dentro de tu clon del repositorio:
+
+```bash
+# Ajusta solo estas tres líneas
+AUTOR="tu-correo@ejemplo.com"                 # varios correos: "uno@x.com\|otro@y.com"
+DESDE="2026-08-01T00:00:00-05:00"
+HASTA="2026-08-30T23:59:59-05:00"
+
+URL=$(git remote get-url origin | sed -E 's#^git@github.com:#https://github.com/#; s#\.git$##')
+git fetch --all --prune -q
+git log --all --no-merges --author="$AUTOR" --since="$DESDE" --until="$HASTA" \
+  --date=iso --reverse \
+  --pretty=tformat:"| [%h]($URL/commit/%h) | %ad | %s |" | tee commits.md | wc -l
+```
+
+- Se imprime **el total de commits**. Las filas ya vienen en formato de tabla y quedan en el archivo `commits.md`: ábrelo, copia las filas y pégalas en la tabla del repositorio. Luego borra `commits.md`.
+- `--all` incluye **todas las ramas**, no solo `main`. Un commit que esté en varias ramas se cuenta una sola vez.
+- `--no-merges` deja por fuera los commits de fusión (*Merge pull request…*).
+- Si el mensaje de un commit contiene el carácter `|`, reemplázalo por `/` para no romper la tabla.
+- Si no tienes el repositorio clonado: `git clone https://github.com/code-sena/PREFIJO-docs`.
+- Si un repositorio no tiene commits tuyos en el periodo, **déjalo en la tabla con 0**; no lo borres.
+
+**Qué cuenta como commit tuyo.** Solo los hechos con tu cuenta. Abre un commit en GitHub: si aparece tu foto de perfil, está vinculado. Si no aparece, tu correo de `git config user.email` no está vinculado a tu cuenta: anótalo en *Observaciones*, no lo ocultes.
+
+</details>
 
 ## 1. Resumen
 
 | Repositorio | Enlace | Commits |
-|---|---|---:|
-| `fae-docs` | https://github.com/code-sena/fae-docs | 5 |
-| `fae-api` | https://github.com/code-sena/fae-api | 0 |
-| `fae-app` | https://github.com/code-sena/fae-app | 0 |
-| `fae-db` | https://github.com/code-sena/fae-db | 0 |
-| `fae-portal` | https://github.com/code-sena/fae-portal | 0 |
-| **Total** | | **5** |
+|---|---|---|
+| `{PREFIJO}-docs` | https://github.com/code-sena/{PREFIJO}-docs | 0 |
+| `{PREFIJO}-api` | https://github.com/code-sena/{PREFIJO}-api | 0 |
+| `{PREFIJO}-app` | https://github.com/code-sena/{PREFIJO}-app | 0 |
+| `{PREFIJO}-db` | https://github.com/code-sena/{PREFIJO}-db | 0 |
+| `{PREFIJO}-portal` | https://github.com/code-sena/{PREFIJO}-portal | 0 |
+| **Total** | | **0** |
 
 ## 2. Repositorio de documentación
 
-- **Repositorio:** `fae-docs`
-- **Enlace:** https://github.com/code-sena/fae-docs
-- **Total de commits en el periodo:** 5
-- **Qué hice (2 a 3 líneas):** Actualicé y corregí la documentación técnica del proyecto, incluyendo navegación, gobierno, contexto, dominios y consistencia documental. También traduje ejemplos de errores y atendí hallazgos de revisión.
+- **Repositorio:** `{PREFIJO}-docs`
+- **Enlace:** https://github.com/code-sena/{PREFIJO}-docs
+- **Total de commits en el periodo:** 0
+- **Qué hice (2 a 3 líneas):**
 
 | Commit ID | Fecha y hora | Mensaje |
 |---|---|---|
-| [c03912592fb515dcf2700fc4f409242344c4c97d](https://github.com/code-sena/fae-docs/commit/c03912592fb515dcf2700fc4f409242344c4c97d) | 2026-09-15 16:08:09 -05 | `fix: Write error in .md file; navigation map completed.` |
-| [b02b4ea1014a0128158b2031ef74f9d05ba9421a](https://github.com/code-sena/fae-docs/commit/b02b4ea1014a0128158b2031ef74f9d05ba9421a) | 2026-09-22 10:08:37 -05 | `Refactor/remove audit domain (#2)` |
-| [e2e9ba51e3ffb65a07fde8a8c90b18ff3ad90fe8](https://github.com/code-sena/fae-docs/commit/e2e9ba51e3ffb65a07fde8a8c90b18ff3ad90fe8) | 2026-09-22 13:03:11 -05 | `docs(00,01): complete governance and context after evaluation` |
-| [b92c8c11f85bfa98c416637f2c59a07d73d5cfd5](https://github.com/code-sena/fae-docs/commit/b92c8c11f85bfa98c416637f2c59a07d73d5cfd5) | 2026-09-23 16:05:50 -05 | `fix(consistency-01-06-data): close findings from 2026-09-22 report - … (#4)` |
-| [a3839172c16c285cbf2595315144e80866b34e0a](https://github.com/code-sena/fae-docs/commit/a3839172c16c285cbf2595315144e80866b34e0a) | 2026-09-28 14:41:59 -05 | `docs: translate error examples` |
+| | | |
 
 ## 3. Repositorios del equipo
 
-### 3.1 `fae-api`
+### 3.1 `{PREFIJO}-api`
 
-- **Enlace:** https://github.com/code-sena/fae-api
+- **Enlace:** https://github.com/code-sena/{PREFIJO}-api
 - **Total de commits en el periodo:** 0
-- **Qué hice (2 a 3 líneas):** No se identificaron commits atribuibles a `andresguti17` en las ramas revisadas dentro del periodo.
+- **Qué hice (2 a 3 líneas):**
 
 | Commit ID | Fecha y hora | Mensaje |
 |---|---|---|
 | | | |
 
-### 3.2 `fae-app`
+### 3.2 `{PREFIJO}-app`
 
-- **Enlace:** https://github.com/code-sena/fae-app
+- **Enlace:** https://github.com/code-sena/{PREFIJO}-app
 - **Total de commits en el periodo:** 0
-- **Qué hice (2 a 3 líneas):** No se identificaron commits atribuibles a `andresguti17` en las ramas revisadas dentro del periodo.
+- **Qué hice (2 a 3 líneas):**
 
 | Commit ID | Fecha y hora | Mensaje |
 |---|---|---|
 | | | |
 
-### 3.3 `fae-db`
+### 3.3 `{PREFIJO}-db`
 
-- **Enlace:** https://github.com/code-sena/fae-db
+- **Enlace:** https://github.com/code-sena/{PREFIJO}-db
 - **Total de commits en el periodo:** 0
-- **Qué hice (2 a 3 líneas):** No se identificaron commits atribuibles a `andresguti17` en las ramas revisadas dentro del periodo.
+- **Qué hice (2 a 3 líneas):**
 
 | Commit ID | Fecha y hora | Mensaje |
 |---|---|---|
 | | | |
 
-### 3.4 `fae-portal`
+### 3.4 `{PREFIJO}-portal`
 
-- **Enlace:** https://github.com/code-sena/fae-portal
+- **Enlace:** https://github.com/code-sena/{PREFIJO}-portal
 - **Total de commits en el periodo:** 0
-- **Qué hice (2 a 3 líneas):** No se identificaron commits atribuibles a `andresguti17` en las ramas revisadas dentro del periodo.
+- **Qué hice (2 a 3 líneas):**
 
 | Commit ID | Fecha y hora | Mensaje |
 |---|---|---|
@@ -83,25 +129,19 @@
 
 ## 4. Verificación del aprendiz
 
-- [x] Se revisaron todas las ramas actuales de `fae-docs`.
-- [x] Se deduplicaron los commits por SHA.
-- [x] Se excluyeron los commits de fusión.
-- [x] Solo se contaron commits que GitHub atribuye actualmente a `andresguti17`.
-- [x] Todos los commits listados están dentro del 11/08/2026–30/09/2026, hora Colombia.
-- [x] Cada enlace de commit abre en GitHub.
-- [x] Los repositorios sin commits quedaron con 0.
+- [ ] Todos los commits listados los hice con mi cuenta (aparece mi foto de perfil en GitHub).
+- [ ] Incluí los commits de **todas las ramas**, no solo de `main`.
+- [ ] Todos los commits caen entre el 1 y el 30 de agosto de 2026 (hora Colombia).
+- [ ] Cada enlace de commit abre en GitHub.
+- [ ] Los repositorios en los que no tengo commits quedaron en la tabla con 0.
+- [ ] El total de cada repositorio coincide con el número de filas de su tabla.
 
 ## 5. Observaciones
 
-- Ramas actuales revisadas en `fae-docs`: `main`, `docs/align-07-api-with-full` y `docs/12-ux-ui-mockup`.
-- Los mismos SHA aparecen en varias ramas; por eso los 5 commits se cuentan una sola vez cada uno.
-- Se detectaron commits históricos de `andresguti17` que ya no son alcanzables desde las ramas actuales. No se incluyen bajo el criterio solicitado de **ramas actuales**.
-- El commit `2a3c32a7840fa925d8f2930f0ca6ce0d7d50e1e9` pertenece a una rama actual de `ProyectoFaceAttendEDU`, pero GitHub no lo atribuye actualmente a la cuenta `andresguti17` en el campo `author`; por la regla del README de contar únicamente commits hechos con la cuenta, no se incluye.
-- El periodo 11/08–30/09/2026 es el periodo solicitado y sustituye al periodo original de agosto indicado en la plantilla.
-- Se identificaron commits realizados con datos de andresguti17, pero no vinculados a su cuenta de GitHub. Por esta razón, no fueron incluidos en el conteo oficial.
+<!-- Commits sin vincular a tu cuenta, ramas con trabajo sin fusionar, repositorios a los que no tuviste acceso, o cualquier otra aclaración. -->
 
 ---
 
 *Declaro que la información de este informe es veraz y que los commits listados son de mi autoría.*
 
-**Aprendiz:** Diego Andrés Gutiérrez Nuñez  **Fecha:** 06 de octubre de 2026
+**Aprendiz:** ______________________  **Fecha:** ______________
