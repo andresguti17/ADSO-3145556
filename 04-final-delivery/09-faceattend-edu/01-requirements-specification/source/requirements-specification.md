@@ -435,7 +435,7 @@ Every functional requirement described in this report must meet, at minimum, the
 
 #### ERF 3.1.2 Alternative Registration (Fingerprint)
 
-- *Purpose:* Use fingerprint as an alternative or complementary method (digitalPerson 4500).
+- *Purpose:* Use fingerprint as an alternative or complementary method (DigitalPersona U.are.U 4500 fingerprint reader).
 - *Platform:* Web and Mobile.
 - *Business Rules:*
   - Only available if the device and operating system support it.
