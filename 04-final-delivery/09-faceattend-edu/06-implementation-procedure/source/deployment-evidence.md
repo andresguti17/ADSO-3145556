@@ -3,7 +3,7 @@
 | Component | Platform | Address |
 |---|---|---|
 | Web application | Vercel | [https://faceattend-frontend.vercel.app](https://faceattend-frontend.vercel.app) |
-| API, through Kong | AWS EC2 | `https://faceattend-edu.duckdns.org` |
+| API, through Kong | AWS EC2 | `https://faceattend-edu.duckdns.org`. The root answers 404 because Kong only routes `/api/v1/...`; `https://faceattend-edu.duckdns.org/api/v1/auth/session` answers 401 without a session, which shows the gateway is up |
 | Relational database | Neon (PostgreSQL) | The connection is not published |
 
 # Latest deployment

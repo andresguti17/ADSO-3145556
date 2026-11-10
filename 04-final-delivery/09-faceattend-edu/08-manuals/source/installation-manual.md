@@ -103,6 +103,7 @@ The manual must be reviewed after every deployment that modifies the services, t
   - [Creation of the Schemas](#creation-of-the-schemas)
   - [Creation of Tables and Catalog Data](#creation-of-tables-and-catalog-data)
   - [Initial System Data](#initial-system-data)
+  - [Creating the Service Accounts](#creating-the-service-accounts)
   - [Loading Test Data](#loading-test-data)
 - [Verifying the Installation](#verifying-the-installation)
   - [Checklist](#checklist)
@@ -834,19 +835,46 @@ The first Super Administrator is created with a script, run once from the Proyec
 |---------------------------|--------------|----------------------------------------------------------------|
 | BOOTSTRAP_ADMIN_USERNAME  | Yes          | User name of the administrator                                 |
 | BOOTSTRAP_ADMIN_EMAIL     | Yes          | Email address of the administrator                             |
-| BOOTSTRAP_ADMIN_PASSWORD  | Yes          | Temporary password of at least twelve characters               |
+| BOOTSTRAP_ADMIN_PASSWORD  | Yes          | Temporary password of 12 to 20 characters                      |
 | BOOTSTRAP_ADMIN_DOCUMENT  | No           | Identity document; a generated value is used when it is empty  |
 
 ```bash
 BOOTSTRAP_ADMIN_USERNAME=admin.local \
 BOOTSTRAP_ADMIN_EMAIL=admin@faceattend.local \
-BOOTSTRAP_ADMIN_PASSWORD='<at least 12 characters>' \
+BOOTSTRAP_ADMIN_PASSWORD='<12 to 20 characters>' \
   ./database/scripts/bootstrap-admin.sh
 ```
 
-*Verification.* Signing in at http://localhost:8090 with that user opens the password change screen. The system requires a new password on the first sign-in; until then, the gateway only allows reading and the password change.
+*Verification.* Signing in at http://localhost:8090 with that user opens the password change screen. The system requires a new password on the first sign-in, also of 12 to 20 characters; until then, the gateway only allows reading and the password change.
 
 *Note.* The script never runs on its own. The accounts admin.faceattend, instructor.faceattend, and aprendiz.faceattend of earlier versions no longer exist in a new installation, and a migration disables them in databases that still had them.
+
+## Creating the Service Accounts
+
+Two services act on their own, without a person signing in, and each one needs a dedicated Super Administrator account. The notification service signs in with the first one when a class is closed: it records as absent every student without an attendance record and sends the absence and risk alerts. The public school sign-up form uses the second one to create the school and its administrator. *Without these accounts the system starts, but closing a class records no absences, the attendance reports count only the students who were present, and the school sign-up answers 503.*
+
+They are created with the same script as the first administrator, from the ProyectoFaceAttendEDU folder. Each password must have 12 to 20 characters and should not contain the # character, which some configuration readers take as the start of a comment. Nobody signs in with these accounts, so the passwords are generated at random:
+
+```bash
+# 1. Account of the notification service
+NOTIFY_PASSWORD="Svc$(openssl rand -hex 7)!7"
+BOOTSTRAP_ADMIN_USERNAME=svc.notification BOOTSTRAP_ADMIN_EMAIL=svc.notification@faceattend.local BOOTSTRAP_ADMIN_PASSWORD="$NOTIFY_PASSWORD"   ./database/scripts/bootstrap-admin.sh
+
+# 2. Account of the school sign-up, and its identifier
+BOOTSTRAP_ADMIN_USERNAME=svc.onboarding BOOTSTRAP_ADMIN_EMAIL=svc.onboarding@faceattend.local BOOTSTRAP_ADMIN_PASSWORD="Svc$(openssl rand -hex 7)!7"   ./database/scripts/bootstrap-admin.sh
+ONBOARDING_ID=$(docker exec faceattend-postgres psql -U postgres -d faceattend_db -tAc   "select user_id from identity.app_user where username = 'svc.onboarding'")
+
+# 3. Write the three values in .env and recreate the two services that read them
+printf 'NOTIFICATION_SERVICE_USERNAME=svc.notification
+NOTIFICATION_SERVICE_PASSWORD=%s
+ONBOARDING_SERVICE_USER_ID=%s
+'   "$NOTIFY_PASSWORD" "$ONBOARDING_ID" >> .env
+docker compose up -d --force-recreate ms-identity ms-notification
+```
+
+If .env already had those three variables empty, the last line of the file wins; it is cleaner to delete the empty ones first. From the version that follows final-delivery-2026, the script database/scripts/service-accounts.sh performs these three steps in one command.
+
+*Verification.* The command `docker logs faceattend-ms-notification 2>&1 | grep "attendance alerts"` shows "attendance alerts enabled". If it shows "attendance alerts disabled", the two notification variables did not reach the service.
 
 ## Loading Test Data
 
@@ -857,7 +885,8 @@ When the system is required to be populated with sample campuses, programs, coho
 # first administrator created with its password already changed
 cd tools/seed-api-test-data
 cp .env.example .env
-# In .env, set BOOTSTRAP_USERNAME and BOOTSTRAP_PASSWORD to that administrator
+# In .env, set BOOTSTRAP_USERNAME and BOOTSTRAP_PASSWORD to that administrator.
+# A value that contains # goes in quotes: BOOTSTRAP_PASSWORD="abc#123"
 npm run seed
 ```
 *Verification.* The process finishes with a successful exit code. Running it repeatedly is safe, since the tool detects pre-existing records and continues without duplicating them.
@@ -1413,8 +1442,11 @@ Test Accounts by Role
 | admin.ict and admin.smp          | Administrator       | Test data tool     | SCHOOL_ADMIN_PASSWORD in the same file                              |
 | carlos.restrepo                  | Instructor          | Test data tool     | INSTRUCTOR_PASSWORD in the same file                                |
 | valentina.rios                   | Student             | Test data tool     | STUDENT_PASSWORD in the same file                                   |
+| est.ict and est.smp              | Student             | Test data tool     | STUDENT_PASSWORD in the same file                                   |
 
-*Note.* The tool also creates eighty instructor accounts, named name.surname, which sign in with TEACHER_PASSWORD.
+*Source.* Own elaboration from tools/seed-api-test-data.
+
+*Note.* The tool also creates eighty instructor accounts, named name.surname, which sign in with TEACHER_PASSWORD; each one teaches classes with attendance records. In final-delivery-2026, carlos.restrepo and valentina.rios sign in but have no academic profile, so their screens are empty: to try the Instructor and Student roles with data, use one of the eighty instructors (listed in Users) and est.ict. The version that follows gives both accounts a profile in the first cohort of the ICT-01 school.
 
 # Appendix D
 
